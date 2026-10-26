@@ -1,6 +1,8 @@
 import { useActionState } from "react";
 import "./App.css";
 import { useProfile } from "./store/profile/ProfileHooks";
+import ThemeProvider from "./ThemeContext";
+import { ThemeDisplay } from "./ThemeDisplay";
 type Login = {
   email: string;
   password: string;
@@ -15,7 +17,7 @@ function App() {
       };
       const start = Date.now();
       while (Date.now() - start < 1000) { }
-      
+
       setProfile({
         id: "1",
         userName: "dave",
@@ -28,6 +30,7 @@ function App() {
     { email: "", password: "" }
   );
   return (
+
     <>
       <form action={action}>
         <div>
@@ -46,5 +49,11 @@ function App() {
       {profile && JSON.stringify(profile)}
     </>
   );
+  return (
+    <ThemeProvider>
+      <ThemeDisplay />
+    </ThemeProvider>
+  );
 }
+
 export default App;
