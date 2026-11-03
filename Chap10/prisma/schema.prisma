@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @db.VarChar(100)
+  email     String   @unique
+  role      Role     @default(USER)
+  posts     Post[]
+  profile   Profile?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String  @db.Text
+  avatar String? @db.VarChar(500)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int     @unique
+}
+
+model Post {
+  id         Int        @id @default(autoincrement())
+  title      String     @db.VarChar(255)
+  summary    String?    @db.VarChar(500)
+  content    String?    @db.Text
+  published  Boolean    @default(false)
+  views      Int        @default(0)
+  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   Int
+  categories Category[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@index([authorId])
+  @@index([published])
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique @db.VarChar(100)
+  posts Post[]
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
