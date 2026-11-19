@@ -7,6 +7,12 @@ import { generalErrorHandler } from './errors.js';
 
 const app = express();
 
+import cors from 'cors';
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}))
+
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: 100,
